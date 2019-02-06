@@ -454,8 +454,12 @@ func (nrc *NetworkRoutingController) injectRoute(path *table.Path) error {
 		link, err = netlink.LinkByName(tunnelName)
 		if err != nil {
 			glog.Infof("Found node: " + nexthop.String() + " to be in different subnet. Creating tunnel: " + tunnelName)
+			//out, err := exec.Command("ip", "tunnel", "add", tunnelName, "mode", "ipip", "local", nrc.nodeIP.String(),
+			//	"remote", nexthop.String(), "dev", nrc.nodeInterface).CombinedOutput()
+
 			out, err := exec.Command("ip", "tunnel", "add", tunnelName, "mode", "ipip", "local", nrc.nodeIP.String(),
-				"remote", nexthop.String(), "dev", nrc.nodeInterface).CombinedOutput()
+				"remote", nexthop.String()).CombinedOutput()
+
 			if err != nil {
 				return fmt.Errorf("Route not injected for the route advertised by the node %s "+
 					"Failed to create tunnel interface %s. error: %s, output: %s",
